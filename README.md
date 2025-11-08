@@ -41,12 +41,7 @@ EventChannel.send("shake") ──────┘
 - `home_view.dart` - UI + quote display
 - `consts.dart` - List of quotes
 
-## Run
 
-```bash
-flutter pub get
-flutter run
-```
 
 Then shake your phone to see quotes!
 

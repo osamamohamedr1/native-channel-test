@@ -1,0 +1,23 @@
+/// Motivational quotes for students
+final List<String> quotes = [
+  "Believe you can and you're halfway there.",
+  "Don't watch the clock; do what it does. Keep going.",
+  "Success is not final, failure is not fatal.",
+  "The harder you work for something, the greater you'll feel when you achieve it.",
+  "Push yourself, because no one else is going to do it for you.",
+  "Dream big, work hard, stay focused, and surround yourself with good people.",
+  "The only way to do great work is to love what you do.",
+  "Your limitation—it's only your imagination.",
+  "Great things never come from comfort zones.",
+  "Success doesn't just find you. You have to go out and get it.",
+  "The expert in anything was once a beginner.",
+  "Study while others are sleeping; work while others are loafing.",
+  "Failure is not the opposite of success; it's part of success.",
+  "Education is the passport to the future.",
+  "The beautiful thing about learning is that no one can take it away from you.",
+  "Don't stop when you're tired. Stop when you're done.",
+  "Wake up with determination. Go to bed with satisfaction.",
+  "It's going to be hard, but hard does not mean impossible.",
+  "Small progress is still progress.",
+  "You are capable of amazing things!",
+];

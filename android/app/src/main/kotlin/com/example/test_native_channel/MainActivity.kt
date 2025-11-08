@@ -1,0 +1,73 @@
+package com.example.test_native_channel
+
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
+import kotlin.math.sqrt
+
+class MainActivity : FlutterActivity(), SensorEventListener {
+    private val CHANNEL = "shake_detector_channel"
+    private var sensorManager: SensorManager? = null
+    private var accel = 0f
+    private var accelCurrent = 0f
+    private var accelLast = 0f
+    private var eventSink: EventChannel.EventSink? = null
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+            .setStreamHandler(object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    eventSink = events
+                    startListening()
+                }
+
+                override fun onCancel(arguments: Any?) {
+                    stopListening()
+                }
+            })
+    }
+
+    private fun startListening() {
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        sensorManager?.registerListener(
+            this,
+            sensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_NORMAL
+        )
+
+        accel = 10f
+        accelCurrent = SensorManager.GRAVITY_EARTH
+        accelLast = SensorManager.GRAVITY_EARTH
+    }
+
+    private fun stopListening() {
+        sensorManager?.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        val x = event?.values?.get(0) ?: 0f
+        val y = event?.values?.get(1) ?: 0f
+        val z = event?.values?.get(2) ?: 0f
+
+        accelLast = accelCurrent
+        accelCurrent = sqrt((x * x + y * y + z * z).toDouble()).toFloat()
+        val delta = accelCurrent - accelLast
+        accel = accel * 0.9f + delta
+
+        // Detect shake (threshold can be tuned)
+        if (accel > 12) {
+            eventSink?.success("shake")
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+        // Not used
+    }
+}
